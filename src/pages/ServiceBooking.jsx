@@ -1,62 +1,73 @@
-import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import api from "../services/api";
 
 export default function ServiceBooking() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
-  // 🔥 SAME dummy services list (Services.jsx jaisi)
-  const dummyServices = [
-    {
-      id: 1,
-      name: "Hair Cut",
-      price: 199,
-      duration: "30 mins",
-      image: "https://via.placeholder.com/400?text=Hair+Cut",
-    },
-    {
-      id: 2,
-      name: "AC Repair",
-      price: 499,
-      duration: "1 hour",
-      image: "https://via.placeholder.com/400?text=AC+Repair",
-    },
-    {
-      id: 3,
-      name: "Electric Wiring",
-      price: 299,
-      duration: "45 mins",
-      image: "https://via.placeholder.com/400?text=Electrician",
-    },
-    {
-      id: 4,
-      name: "Pipe Leakage Fix",
-      price: 349,
-      duration: "40 mins",
-      image: "https://via.placeholder.com/400?text=Plumber",
-    },
-  ];
-
-  // 🔥 ID ke base pe correct service nikaalo
-  const service = dummyServices.find(
-    (s) => s.id === Number(id)
-  );
+  const [service, setService] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [address, setAddress] = useState("");
 
-  if (!service) {
-    return <p className="text-center mt-10">Service not found</p>;
+  // 🔹 Fetch service by ID
+  useEffect(() => {
+    api
+      .get(`/services/${id}`)
+      .then((res) => {
+        setService(res.data);
+      })
+      .catch(() => {
+        setService(null);
+      })
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  if (loading) {
+    return (
+      <p className="text-center mt-10 text-gray-500">
+        Loading service...
+      </p>
+    );
   }
 
-  const handleBooking = () => {
-    if (!date || !time || !address) {
-      alert("Please fill all details");
-      return;
-    }
+  if (!service) {
+    return (
+      <p className="text-center mt-10 text-red-500">
+        Service not found
+      </p>
+    );
+  }
 
-    alert(`Booking confirmed for ${service.name}`);
-  };
+  const handleBooking = async () => {
+  if (!date || !time || !address) {
+    alert("Please fill all details");
+    return;
+  }
+
+  if (!service.vendor) {
+    alert("Vendor not available for this service");
+    return;
+  }
+
+  const bookingDate = `${date}T${time}:00`;
+
+  try {
+    await api.post("/bookings", {
+  bookingDate,
+  serviceId: service.id,
+  vendorId: service.vendor.id, // 🔥 THIS WAS MISSING
+});
+    alert("Booking successful 🎉");
+    navigate("/my-bookings");
+  } catch (err) {
+    alert("Booking failed");
+    console.error(err);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-10">
@@ -64,11 +75,18 @@ export default function ServiceBooking() {
         {/* Service Info */}
         <div className="grid md:grid-cols-2 gap-6">
           <img
-            src={service.image}
-            alt={service.name}
-            className="rounded w-full"
-          />
-
+  src={
+    service.image?.startsWith("http")
+      ? service.image
+      : `${import.meta.env.VITE_API_URL}/uploads/${service.image}`
+  }
+  alt={service.name}
+  className="rounded w-full"
+  onError={(e) => {
+    e.currentTarget.src =
+      "https://placehold.co/400x300?text=No+Image";
+  }}
+/>
           <div>
             <h2 className="text-2xl font-bold mb-2">
               {service.name}
