@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";g
+import { Link } from "react-router-dom"
 
 export default function UserDashboard() {
   return (
