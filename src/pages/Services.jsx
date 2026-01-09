@@ -43,28 +43,25 @@ export default function Services() {
               key={service.id}
               className="bg-white rounded shadow hover:shadow-lg transition"
             >
-              {/* IMAGE (category image) */}
+              {/* IMAGE (fallback only) */}
               <img
-                src={
-                  service.category?.image
-                    ? `${import.meta.env.VITE_API_URL}/uploads/${service.category.image}`
-                    : "https://via.placeholder.com/300"
-                }
-                alt={service.name}
+                src="https://placehold.co/300x200?text=Service"
+                alt={service.title}
                 className="w-full h-40 object-cover rounded-t"
-                onError={(e) =>
-                  (e.currentTarget.src =
-                    "https://via.placeholder.com/300")
-                }
               />
 
               <div className="p-5">
+                {/* ✅ FIXED FIELD */}
                 <h3 className="text-xl font-semibold mb-2">
-                  {service.name}
+                  {service.title}
                 </h3>
 
                 <p className="text-gray-600 text-sm mb-1">
                   Category: {service.category?.name}
+                </p>
+
+                <p className="text-gray-600 text-sm mb-1">
+                  Vendor: {service.vendor?.name}
                 </p>
 
                 <p className="text-gray-600 text-sm mb-1">

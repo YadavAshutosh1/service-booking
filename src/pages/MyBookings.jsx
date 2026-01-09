@@ -44,9 +44,17 @@ export default function MyBookings() {
               className="bg-white p-5 rounded shadow flex justify-between items-center"
             >
               <div>
+                {/* ✅ FIXED: title */}
                 <h3 className="text-lg font-semibold">
-                  {b.service?.name || "Service"}
+                  {b.service?.title}
                 </h3>
+
+                <p className="text-sm text-gray-600">
+                  Vendor:{" "}
+                  <span className="font-medium">
+                    {b.vendor?.name}
+                  </span>
+                </p>
 
                 <p className="text-sm text-gray-600">
                   Date:{" "}
@@ -57,16 +65,23 @@ export default function MyBookings() {
                 <p className="text-sm mt-1">
                   Status:{" "}
                   <span
-                    className={`font-semibold ${
+                    className={`font-semibold px-2 py-1 rounded ${
                       b.status === "CONFIRMED"
-                        ? "text-green-600"
+                        ? "bg-green-100 text-green-700"
                         : b.status === "PENDING"
-                        ? "text-yellow-600"
-                        : "text-red-600"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : "bg-red-100 text-red-700"
                     }`}
                   >
                     {b.status}
                   </span>
+                </p>
+              </div>
+
+              {/* Price */}
+              <div className="text-right">
+                <p className="text-lg font-bold text-blue-600">
+                  ₹{Number(b.service?.price)}
                 </p>
               </div>
             </div>

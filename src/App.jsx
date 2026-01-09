@@ -7,7 +7,7 @@ import Services from "./pages/Services";
 import ServiceBooking from "./pages/ServiceBooking";
 import UserDashboard from "./pages/UserDashboard";
 import MyBookings from "./pages/MyBookings";
-
+import VendorDashboard from "./pages/VendorDashboard";
 function App() {
   return (
     <BrowserRouter>
@@ -35,6 +35,14 @@ function App() {
   element={
     <ProtectedRoute>
       <MyBookings />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/vendor/dashboard"
+  element={
+    <ProtectedRoute>
+      <VendorDashboard />
     </ProtectedRoute>
   }
 />
