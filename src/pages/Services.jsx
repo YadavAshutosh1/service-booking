@@ -20,69 +20,89 @@ export default function Services() {
 
   if (loading) {
     return (
-      <p className="text-center mt-10 text-gray-500">
-        Loading services...
-      </p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent mb-4"></div>
+          <p className="text-gray-600 text-lg font-medium">Loading services...</p>
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 px-8 py-10">
-      <h1 className="text-3xl font-bold text-center mb-10">
-        Available Services
-      </h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
 
-      {services.length === 0 ? (
-        <p className="text-center text-gray-500">
-          No services available
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {services.map((service) => (
-            <div
-              key={service.id}
-              className="bg-white rounded shadow hover:shadow-lg transition"
-            >
-              {/* IMAGE (fallback only) */}
-              <img
-                src="https://placehold.co/300x200?text=Service"
-                alt={service.title}
-                className="w-full h-40 object-cover rounded-t"
-              />
-
-              <div className="p-5">
-                {/* ✅ FIXED FIELD */}
-                <h3 className="text-xl font-semibold mb-2">
-                  {service.title}
-                </h3>
-
-                <p className="text-gray-600 text-sm mb-1">
-                  Category: {service.category?.name}
-                </p>
-
-                <p className="text-gray-600 text-sm mb-1">
-                  Vendor: {service.vendor?.name}
-                </p>
-
-                <p className="text-gray-600 text-sm mb-1">
-                  Duration: {service.duration}
-                </p>
-
-                <p className="text-lg font-bold text-blue-600 mb-4">
-                  ₹{Number(service.price)}
-                </p>
-
-                <Link
-                  to={`/services/${service.id}`}
-                  className="block text-center bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-                >
-                  Book Now
-                </Link>
-              </div>
-            </div>
-          ))}
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-16 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="text-5xl font-extrabold mb-4">
+            Available Services
+          </h1>
+          <p className="text-xl text-blue-100">
+            Professional services at your doorstep
+          </p>
         </div>
-      )}
+      </div>
+
+      {/* Services Grid */}
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        {services.length === 0 ? (
+          <p className="text-center text-gray-500">
+            No services available
+          </p>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {services.map((service) => (
+              <div
+                key={service.id}
+                className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all transform hover:-translate-y-2 overflow-hidden"
+              >
+                {/* Image */}
+                <div className="relative h-56 bg-blue-50">
+                  <img
+                    src="https://placehold.co/400x300?text=Service"
+                    alt={service.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition"
+                  />
+
+                  {/* Category */}
+                  <span className="absolute top-4 left-4 bg-white text-blue-600 px-4 py-1 rounded-full text-sm font-semibold">
+                    {service.category?.name}
+                  </span>
+
+                  {/* Price */}
+                  <span className="absolute top-4 right-4 bg-blue-600 text-white px-4 py-1 rounded-full font-bold">
+                    ₹{Number(service.price)}
+                  </span>
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  <h3 className="text-2xl font-bold mb-3">
+                    {service.title}
+                  </h3>
+
+                  <p className="text-gray-600 mb-1">
+                    Vendor: {service.vendor?.name}
+                  </p>
+
+                  <p className="text-gray-600 mb-4">
+                    Duration: {service.duration}
+                  </p>
+
+                  <Link
+                    to={`/services/${service.id}`}
+                    className="block w-full text-center bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition"
+                  >
+                    Book Now
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }
