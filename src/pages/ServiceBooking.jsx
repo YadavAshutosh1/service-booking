@@ -41,6 +41,14 @@ export default function ServiceBooking() {
       </p>
     );
   }
+  
+  const token = localStorage.getItem("token");
+
+if (!token) {
+  alert("Please login first");
+  navigate("/login");
+  return;
+}
 
   const handleBooking = async () => {
   if (!date || !time || !address) {
@@ -48,26 +56,38 @@ export default function ServiceBooking() {
     return;
   }
 
-  if (!service.vendor) {
-    alert("Vendor not available for this service");
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert("Please login first");
+    navigate("/login");
     return;
   }
 
   const bookingDate = `${date}T${time}:00`;
 
   try {
-    await api.post("/bookings", {
-  bookingDate,
-  serviceId: service.id,
-  vendorId: service.vendor.id, // 🔥 THIS WAS MISSING
-});
+    await api.post(
+      "/bookings",
+      {
+        bookingDate,
+        serviceId: service.id
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
     alert("Booking successful 🎉");
     navigate("/my-bookings");
   } catch (err) {
-    alert("Booking failed");
-    console.error(err);
+    console.error(err.response?.data || err);
+    alert(err.response?.data?.message || "Booking failed");
   }
 };
+
 
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-10">

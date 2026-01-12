@@ -5,21 +5,20 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
     "ngrok-skip-browser-warning": "true",
-    
   },
 });
 
-// Token attach
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-console.log("Axios Base URL:", import.meta.env.VITE_API_URL);
+const token = localStorage.getItem("token");
+if (token) {
+  api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+}
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 export default api;
