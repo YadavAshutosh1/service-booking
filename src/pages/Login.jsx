@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import Dashboard from './../components/layout/DashboardLayout';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -19,23 +20,27 @@ export default function Login() {
     });
   };
 
-  const handleLogin = async () => {
-    try {
-      setLoading(true);
+  const handleLogin = async (e) => {
+  e.preventDefault();
 
-      const res = await api.post("/auth/login", formData);
+  const res = await api.post("/auth/login", {
+    email,
+    password,
+  });
 
-      // ✅ Save token
-      localStorage.setItem("token", res.data.access_token);
+  const token = res.data.access_token;
+  localStorage.setItem("token", token);
 
-      // 🔙 Go back to previous page (like Home or Services)
-      navigate(-1);
-    } catch (error) {
-      alert(error.response?.data?.message || "Login failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const payload = JSON.parse(atob(token.split(".")[1]));
+
+  if (payload.role === "VENDOR") {
+    navigate("/vendor/dashboard");
+  } else {
+    navigate("/dashboard");
+  }
+};
+
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 px-4">
@@ -104,14 +109,14 @@ export default function Login() {
               {loading ? "Logging in..." : "Login"}
             </button>
 
-            {/* Register */}
+            {/* Dashboard */}
             <p className="text-center text-gray-600">
               Don’t have an account?{" "}
               <span
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/Dashboard")}
                 className="text-blue-600 font-semibold cursor-pointer hover:underline"
               >
-                Register Now
+                Dashboard
               </span>
             </p>
 
