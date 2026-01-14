@@ -34,17 +34,17 @@ export default function Login() {
       const payload = JSON.parse(atob(token.split(".")[1]));
 
       // 🔐 Role validation
-      if (loginType === "VENDOR" && payload.role !== "VENDOR") {
-        alert("This account is not registered as Vendor");
-        setLoading(false);
-        return;
-      }
+      // if (loginType === "VENDOR" && payload.role !== "VENDOR") {
+      //   alert("This account is not registered as Vendor");
+      //   setLoading(false);
+      //   return;
+      // }
 
-      if (loginType === "USER" && payload.role !== "USER") {
-        alert("This account is not registered as User");
-        setLoading(false);
-        return;
-      }
+      // if (loginType === "USER" && payload.role !== "USER") {
+      //   alert("This account is not registered as User");
+      //   setLoading(false);
+      //   return;
+      // }
 
       // Save token only if role matches
       localStorage.setItem("token", token);
@@ -114,27 +114,7 @@ export default function Login() {
             </div>
 
             {/* 🔥 Login Type Selector */}
-            <div className="flex gap-4">
-              <button
-                type="button"
-                onClick={() => setLoginType("USER")}
-                className={`flex-1 py-2 rounded-lg border ${
-                  loginType === "USER" ? "bg-blue-600 text-white" : "bg-gray-100"
-                }`}
-              >
-                User
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setLoginType("VENDOR")}
-                className={`flex-1 py-2 rounded-lg border ${
-                  loginType === "VENDOR" ? "bg-green-600 text-white" : "bg-gray-100"
-                }`}
-              >
-                Vendor
-              </button>
-            </div>
+           
 
             {/* Login Button */}
             <button
