@@ -6,17 +6,24 @@ export default function VendorDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api
-      .get("/bookings/vendor/me")
-      .then((res) => {
-        setBookings(res.data || []);
-      })
-      .catch((err) => {
-        console.error("Vendor bookings error:", err);
-        setBookings([]);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  const token = localStorage.getItem("token");
+
+  api
+    .get("/bookings/vendor/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => {
+      setBookings(Array.isArray(res.data) ? res.data : []);
+    })
+    .catch((err) => {
+      console.error("Vendor bookings error:", err);
+      setBookings([]);
+    })
+    .finally(() => setLoading(false));
+}, []);
+
 
   if (loading) {
     return (
@@ -27,9 +34,17 @@ export default function VendorDashboard() {
   }
   const updateStatus = async (bookingId, status) => {
   try {
-    await api.patch(`/bookings/${bookingId}/status`, {
-      status,
-    });
+    const token = localStorage.getItem("token");
+
+    await api.patch(
+      `/bookings/${bookingId}/status`,
+      { status },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     setBookings((prev) =>
       prev.map((b) =>
@@ -104,8 +119,16 @@ export default function VendorDashboard() {
               >
                 {b.status}
               </span>
-            </div>
 
+              <Link
+  to="/vendor/services"
+  className="bg-blue-600 text-white px-4 py-2 rounded"
+>
+  Manage Services
+</Link>
+            </div>
+          
+          
             
           ))}
         </div>
